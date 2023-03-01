@@ -5,7 +5,8 @@ using UnityEngine;
 public class MainManager : MonoBehaviour
 {
     public static MainManager instance { get; private set; }
-    public string playerName;
+    public string player1Name;
+    public string player2Name;
 
     // Start is called before the first frame update
     void Start()
