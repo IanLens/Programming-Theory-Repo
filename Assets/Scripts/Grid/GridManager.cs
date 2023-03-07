@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GridManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] private Transform _parent;
     [SerializeField] private Transform _highLight;
+    [SerializeField] private Transform _selectedHighLight;
+
+    [SerializeField] private TMP_Text locationText;
 
     //private void Awake()
     //{
@@ -40,8 +44,31 @@ public class GridManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.SpawnPieces);
     }
 
-    public void SetHighLight(Vector2 pos)
+    public void SetHighLight(Vector2 pos, bool setActive)
     {
-        _highLight.transform.position = pos;
+        HighLightFunctionality(_highLight, pos, setActive);
+    }
+
+    public void SetSelectedHighLight(Vector2 pos, bool setActive)
+    {
+        HighLightFunctionality(_selectedHighLight, pos, setActive);
+    }
+
+    public void HighLightFunctionality(Transform highlight, Vector2 pos, bool setActive)
+    {
+        if (setActive)
+        {
+            highlight.gameObject.SetActive(true);
+            highlight.position = pos;
+        }
+        else
+        {
+            highlight.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowLocation(Vector2 location)
+    {
+        locationText.text = location.ToString();
     }
 }

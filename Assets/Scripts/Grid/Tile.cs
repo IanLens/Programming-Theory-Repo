@@ -6,21 +6,26 @@ public class Tile : MonoBehaviour
 {
     [SerializeField] private Color _baseColor, _offsetColor;
     [SerializeField] private SpriteRenderer _renderer;
-    [SerializeField] private GridManager _gridManager;
 
+    //private bool isOccupied { get; } = false;
     public void Init(int x, int y)
     {
         bool isOffset = (x + y) % 2 == 1;
         _renderer.color = isOffset ? _offsetColor : _baseColor;
     }
 
-    private void OnMouseEnter()
+    private void OnMouseOver()
     {
-        GameManager.Instance.gridManager.SetHighLight(transform.position);
+        GameManager.Instance.HoverLocation(this.transform.position, true);
     }
 
     private void OnMouseExit()
     {
-        //_highLight.SetActive(false);
+        GameManager.Instance.HoverLocation(this.transform.position, false);
+    }
+
+    private void OnMouseUp()
+    {
+        GameManager.Instance.MoveCurrentPieceToPosition(transform.position);
     }
 }
