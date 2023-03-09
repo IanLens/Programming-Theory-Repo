@@ -17,10 +17,7 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] private TMP_Text locationText;
 
-    //private void Awake()
-    //{
-    //    Instance = this;
-    //}
+    private List<Tile> tileGrid = new List<Tile>();
 
     public void GenerateGrid()
     {
@@ -28,12 +25,13 @@ public class GridManager : MonoBehaviour
         {
             for (int y = 0; y < _height; y++)
             {
-                Tile spawnedTile = Instantiate(_tilePrefab, new Vector3(x, y), Quaternion.identity);
+                Tile spawnedTile = Instantiate(_tilePrefab, new Vector2(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
                 spawnedTile.transform.parent = _parent;
 
                 
                 spawnedTile.Init(x, y);
+                tileGrid.Add(spawnedTile);
             }
         }
 
@@ -44,22 +42,22 @@ public class GridManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.SpawnPieces);
     }
 
-    public void SetHighLight(Vector2 pos, bool setActive)
+    public void SetHighLight(Vector2Int pos, bool setActive)
     {
         HighLightFunctionality(_highLight, pos, setActive);
     }
 
-    public void SetSelectedHighLight(Vector2 pos, bool setActive)
+    public void SetSelectedHighLight(Vector2Int pos, bool setActive)
     {
         HighLightFunctionality(_selectedHighLight, pos, setActive);
     }
 
-    public void HighLightFunctionality(Transform highlight, Vector2 pos, bool setActive)
+    public void HighLightFunctionality(Transform highlight, Vector2Int coords, bool setActive)
     {
         if (setActive)
         {
             highlight.gameObject.SetActive(true);
-            highlight.position = pos;
+            highlight.position = new Vector2(coords.x, coords.y);
         }
         else
         {
@@ -67,8 +65,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void ShowLocation(Vector2 location)
+    public Tile GetTile(Vector2Int coords)
     {
-        locationText.text = location.ToString();
+        Tile tile = tileGrid.Find(x => x.coordinates == coords);
+        return tile;
     }
 }

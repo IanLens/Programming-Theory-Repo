@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum GameState { GenerateGrid, SpawnPieces, Player1Turn, Player2Turn, GameOver }
+public enum GameState { GenerateGrid, SpawnPieces, PlayerDarkTurn, PlayerLightTurn, GameOver }
 public enum PlayerColor { Black, White }
 public enum PieceType { Pawn, Rook, Bishop, Knight, Queen, King}
 public class GameManager : MonoBehaviour
@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Pawn[] gamePiecePrefabs;
     [SerializeField] private Transform chessPiecesParent;
 
-    public Dictionary<Pawn, Vector2> chessPieceDictionary { get; private set; } = new Dictionary<Pawn, Vector2>();
+    public List<Pawn> chessPieceList { get; private set; } = new List<Pawn>();
 
     private PlayerColor currentColor;
     private Pawn currentPiece;
@@ -46,9 +46,11 @@ public class GameManager : MonoBehaviour
             case GameState.SpawnPieces:
                 SpawnPieces();
                 break;
-            case GameState.Player1Turn:
+            case GameState.PlayerDarkTurn:
+                currentColor = PlayerColor.Black;
                 break;
-            case GameState.Player2Turn:
+            case GameState.PlayerLightTurn:
+                currentColor = PlayerColor.White;
                 break;
             case GameState.GameOver:
                 break;
@@ -61,20 +63,25 @@ public class GameManager : MonoBehaviour
     {
         foreach (Pawn piece in gamePiecePrefabs)
         {
-            switch (piece.pieceType)
+            switch (piece.GetPieceType())
             {
                 case PieceType.Pawn:
                     SpawnPawns(piece);
                     break;
                 case PieceType.Rook:
+                    SpawnDualPieces(piece, 0);
                     break;
                 case PieceType.Bishop:
+                    SpawnDualPieces(piece, 2);
                     break;
                 case PieceType.Knight:
+                    SpawnDualPieces(piece, 1);
                     break;
                 case PieceType.Queen:
+                    CreatePiece(piece, new Vector2Int(3, piece.GetColor() == PlayerColor.Black ? 7 : 0));
                     break;
                 case PieceType.King:
+                    CreatePiece(piece, new Vector2Int(4, piece.GetColor() == PlayerColor.Black ? 7 : 0));
                     break;
                 default:
                     break;
@@ -84,17 +91,25 @@ public class GameManager : MonoBehaviour
 
     private void SpawnPawns(Pawn pawn)
     {
-        int yPos = pawn.playerColor == PlayerColor.Black ? 6 : 1;
+        int yPos = pawn.GetColor() == PlayerColor.Black ? 6 : 1;
         for (int i = 0; i < 8; i++)
         {
-            CreatePiece(pawn, new Vector2(i, yPos));
+            CreatePiece(pawn, new Vector2Int(i, yPos));
         }
     }
 
-    private void CreatePiece(Pawn piece, Vector2 location)
+    private void SpawnDualPieces(Pawn piece, int xPosOffset)
     {
-        Pawn currentPawn = Instantiate(piece, location, Quaternion.identity);
-        chessPieceDictionary.Add(currentPawn, location);
+        int yPos = piece.GetColor() == PlayerColor.Black ? 7 : 0;
+        CreatePiece(piece, new Vector2Int(0 + xPosOffset, yPos));
+        CreatePiece(piece, new Vector2Int(7 - xPosOffset, yPos));
+    }
+
+    private void CreatePiece(Pawn piece, Vector2Int coords)
+    {
+        Pawn currentPawn = Instantiate(piece, new Vector2(coords.x, coords.y), Quaternion.identity);
+        currentPawn.Init(coords.x, coords.y);
+        chessPieceList.Add(currentPawn);
         currentPawn.transform.parent = chessPiecesParent;
     }
 
@@ -103,79 +118,80 @@ public class GameManager : MonoBehaviour
         bool highlight = false;
         if (currentPiece == null)
         {
-            highlight = piece.playerColor == currentColor ? isOver : false;
+            highlight = piece.GetColor() == currentColor ? isOver : false;
         }
-        else if(ComparePossibleLocations(piece.transform.position))
+        else if(ComparePossibleLocations(piece.coordinates))
         {
-            highlight = piece.playerColor != currentColor ? isOver : false;
+            highlight = piece.GetColor() != currentColor ? isOver : false;
         }
-        gridManager.SetHighLight(piece.transform.position, highlight);
+        gridManager.SetHighLight(piece.coordinates, highlight);
     }
 
-    public void HoverLocation(Vector2 pos, bool isOver)
+    public void HoverLocation(Vector2Int coords, bool isOver)
     {
-        if (currentPiece != null && ComparePossibleLocations(pos))
+        if (currentPiece != null && ComparePossibleLocations(coords))
         {
-            gridManager.SetHighLight(pos, isOver);
+            gridManager.SetHighLight(coords, isOver);
         }
     }
 
     public void ClickPiece(Pawn piece)
     {
-        if (piece.playerColor == currentColor)
+        if (piece.GetColor() == currentColor)
         {
             // undo highlight
             if (piece == currentPiece)
             {
-                Debug.Log("Deselected piece " + piece.pieceType + " at position " + piece.transform.position);
                 currentPiece = null;
-                gridManager.SetSelectedHighLight(piece.transform.position, false);
+                gridManager.SetSelectedHighLight(piece.coordinates, false);
             }
-            else // if (currentPiece == null)
+            else
             {
-                Debug.Log("Selected piece " + piece.pieceType + " at position " + piece.transform.position);
                 // highlight piece.ReturnPossibleLocations()
                 currentPiece = piece;
-                gridManager.SetSelectedHighLight(piece.transform.position, true);
+                gridManager.SetSelectedHighLight(piece.coordinates, true);
             }
         }
-        else if(currentPiece != null && ComparePossibleLocations(piece.transform.position))
+        else if(currentPiece != null && ComparePossibleLocations(piece.coordinates))
         {
-            MoveCurrentPieceToPosition(piece.transform.position);
+            MoveCurrentPieceToPosition(piece.coordinates);
             MovePieceOffBoard(piece);
         }
     }
 
-    public void MoveCurrentPieceToPosition(Vector2 pos)
+    public void MoveCurrentPieceToPosition(Vector2Int coords)
     {
-        // Check if viable position -> Move piece
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Clean this up with proper class to hold official chessboard locations
-        if (currentPiece != null && ComparePossibleLocations(pos))
+        if (currentPiece != null && ComparePossibleLocations(coords))
         {
-            Debug.Log("test");
-            currentPiece.gameObject.transform.position = pos;
-            chessPieceDictionary[currentPiece] = pos;
+            currentPiece.MovePiece(coords);
             currentPiece = null;
-            gridManager.SetSelectedHighLight(pos, false);
+            gridManager.SetSelectedHighLight(coords, false);
+            SwitchPlayer();
         }
     }
 
     private void MovePieceOffBoard(Pawn piece)
     {
-        if (piece.pieceType != PieceType.King)
+        if (piece.GetPieceType() != PieceType.King)
         {
-            int offBoardPieces = chessPieceDictionary.Where(x => x.Key.playerColor == piece.playerColor && !x.Key.isActive).Count();
+            int offBoardPieces = chessPieceList.Where(x => x.GetColor() == piece.GetColor() && !x.isActive).Count();
+            
+
+            int startX = piece.GetColor() == PlayerColor.Black ? 9 : -5;
+            Vector2Int offBoardLocation = new Vector2Int(startX + offBoardPieces % 4, offBoardPieces / 4);
+
+            piece.MovePiece(offBoardLocation);
             piece.SetPieceInactive();
-
-            int startX = piece.playerColor == PlayerColor.Black ? 9 : -5;
-
-            piece.gameObject.transform.position = new Vector2(startX + offBoardPieces % 4, offBoardPieces / 4);
         }
     }
 
-    private bool ComparePossibleLocations(Vector2 pos)
+    private bool ComparePossibleLocations(Vector2Int coordinates)
     {
-        return currentPiece.ReturnPossibleLocations().Any(x => x.ToString() == pos.ToString());
+        return currentPiece.ReturnPossibleLocations().Any(x => x == coordinates);
+    }
+
+    private void SwitchPlayer()
+    {
+        ChangeState(GameState == GameState.PlayerLightTurn ? GameState.PlayerDarkTurn : GameState.PlayerLightTurn);
     }
 }

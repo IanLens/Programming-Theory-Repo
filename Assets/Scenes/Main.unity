@@ -172,7 +172,17 @@ MonoBehaviour:
   gridManager: {fileID: 2087854096}
   gamePiecePrefabs:
   - {fileID: 9160129809557967129, guid: 27769734a2dae17449c8af7f3a4aa31e, type: 3}
-  - {fileID: 1271876864346751383, guid: a763eec16afa5b741bbda5d74b52e3d2, type: 3}
+  - {fileID: 1216026585422719070, guid: a763eec16afa5b741bbda5d74b52e3d2, type: 3}
+  - {fileID: 639695794460542801, guid: ca69188ee8472a640b935b5ea005396a, type: 3}
+  - {fileID: 1037490227481276542, guid: 48301b6832cdcb9478d6ff3923470057, type: 3}
+  - {fileID: 7571967325180985306, guid: 9ea07372e0346304286c1404d8a5706e, type: 3}
+  - {fileID: 3971418012302541891, guid: a2b1b95be273d0a4a9da1d89604ee9be, type: 3}
+  - {fileID: 9053285382804988191, guid: c875b39143adef048addf4ef60fbc79e, type: 3}
+  - {fileID: 6827275158185661257, guid: 44bc1e6a920672f4db39769e2815bfe9, type: 3}
+  - {fileID: 5481359327712405088, guid: 825591e20e118e04ca22b3ac06c39707, type: 3}
+  - {fileID: 6698229286912309291, guid: ee3eac33704e70d47bf245c975063505, type: 3}
+  - {fileID: 7472028955962979551, guid: 6870abb3c9911444a887aaf0b21c6eae, type: 3}
+  - {fileID: 6449514380825412931, guid: 315baadd7ce80e346bad0441c367b2d6, type: 3}
   chessPiecesParent: {fileID: 1856248460}
 --- !u!1 &338444618
 GameObject:
