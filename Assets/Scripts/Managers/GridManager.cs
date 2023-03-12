@@ -1,21 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class GridManager : MonoBehaviour
 {
     //public static GridManager Instance;
 
+    [Header("Settings")]
     [SerializeField] private int _width, _height;
+    [Header("Grid Objects")]
     [SerializeField] private Tile _tilePrefab;
     [SerializeField] private Transform _cam;
-
     [SerializeField] private Transform _parent;
     [SerializeField] private Transform _highLight;
     [SerializeField] private Transform _selectedHighLight;
-
-    [SerializeField] private TMP_Text locationText;
 
     private List<Tile> tileGrid = new List<Tile>();
 

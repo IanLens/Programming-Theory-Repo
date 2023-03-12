@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,8 +17,8 @@ public class TitleMenu : MonoBehaviour
         string player2Name = player2InputField.text;
         if (player1Name != "" && player2Name != "" && player1Name != player2Name)
         {
-            MainManager.instance.player1Name = player1Name;
-            MainManager.instance.player2Name = player2Name;
+            DataManager.instance.SetPlayerNames(player1Name, player2Name);
+            
             SceneManager.LoadScene(1);
         }
         else
@@ -34,5 +35,14 @@ public class TitleMenu : MonoBehaviour
             }
             
         }
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif
     }
 }

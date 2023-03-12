@@ -19,17 +19,17 @@ public class Tile : MonoBehaviour
 
     private void OnMouseOver()
     {
-        GameManager.Instance.HoverLocation(coordinates, true);
+        GameManager.Instance.interactionHandler.HoverLocation(coordinates, true);
     }
 
     private void OnMouseExit()
     {
-        GameManager.Instance.HoverLocation(coordinates, false);
+        GameManager.Instance.interactionHandler.HoverLocation(coordinates, false);
     }
 
     private void OnMouseUp()
     {
-        GameManager.Instance.MoveCurrentPieceToPosition(coordinates);
+        if(GameManager.Instance.interactionHandler.ComparePossibleLocations(coordinates)) GameManager.Instance.interactionHandler.MoveCurrentPieceToPosition(coordinates);
     }
 }
 

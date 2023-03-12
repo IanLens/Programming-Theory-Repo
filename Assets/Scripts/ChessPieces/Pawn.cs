@@ -44,7 +44,7 @@ public class Pawn : MonoBehaviour
     {
         List<Vector2Int> possibleLocations = new List<Vector2Int>();
 
-        int y = playerColor == PlayerColor.White ? coordinates.y + 1 : coordinates.y - 1;
+        int y = playerColor == PlayerColor.Light ? coordinates.y + 1 : coordinates.y - 1;
         int x = coordinates.x;
 
         // Basic movement if tile is not taken
@@ -53,9 +53,9 @@ public class Pawn : MonoBehaviour
             possibleLocations.Add(new Vector2Int(x, y));
         }
 
-        if (!hasMoved && !LocationOccupiedCheck(new Vector2Int(x, playerColor == PlayerColor.White ? y + 1 : y - 1)))
+        if (!hasMoved && !LocationOccupiedCheck(new Vector2Int(x, playerColor == PlayerColor.Light ? y + 1 : y - 1)))
         {
-            possibleLocations.Add(new Vector2Int(x, playerColor == PlayerColor.White ? y + 1 : y - 1));
+            possibleLocations.Add(new Vector2Int(x, playerColor == PlayerColor.Light ? y + 1 : y - 1));
         }
 
         // Takeover movement of Pawn
@@ -89,16 +89,16 @@ public class Pawn : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if(isActive) GameManager.Instance.ClickPiece(this);
+        if(isActive) GameManager.Instance.interactionHandler.ClickPiece(this);
     }
 
     private void OnMouseOver()
     {
-        if(isActive) GameManager.Instance.HoverPiece(this, true);
+        if(isActive) GameManager.Instance.interactionHandler.HoverPiece(this, true);
     }
 
     private void OnMouseExit()
     {
-        if(isActive) GameManager.Instance.HoverPiece(this, false);
+        if(isActive) GameManager.Instance.interactionHandler.HoverPiece(this, false);
     }
 }
