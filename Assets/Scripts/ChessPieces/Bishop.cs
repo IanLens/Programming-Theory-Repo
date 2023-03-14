@@ -8,10 +8,10 @@ public class Bishop : Rook
     {
         List<Vector2Int> possibleLocations = new List<Vector2Int>();
 
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(1,1)));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(-1,1)));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(1,-1)));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(-1,-1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(1,1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(-1,1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(1,-1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(-1,-1)));
 
         return possibleLocations;
     }

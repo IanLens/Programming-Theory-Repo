@@ -8,10 +8,15 @@ public class Pawn : MonoBehaviour
 {
     [SerializeField]
     private PlayerColor playerColor;
+    // ENCAPSULATION
     [SerializeField]
     private PieceType pieceType;
-
-    public bool isActive { get; private set; } = true;
+    public PlayerColor Color
+    {
+        get { return playerColor; }
+    }
+    
+    public bool isActive { get; private set; }
 
     public Vector2Int coordinates { get; private set; }
 
@@ -21,11 +26,7 @@ public class Pawn : MonoBehaviour
     public void Init(int x, int y)
     {
         coordinates = new Vector2Int(x, y);
-    }
-
-    public PlayerColor GetColor()
-    {
-        return playerColor;
+        isActive = true;
     }
 
     public PieceType GetPieceType()
@@ -84,7 +85,7 @@ public class Pawn : MonoBehaviour
 
     protected bool TakeoverColorCheck(Vector2Int coordsToCheck)
     {
-        return GameManager.Instance.chessPieceList.Find(piece => piece.coordinates == coordsToCheck).GetColor() != GetColor();
+        return GameManager.Instance.chessPieceList.Find(piece => piece.coordinates == coordsToCheck).Color != Color;
     }
 
     private void OnMouseUp()

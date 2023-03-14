@@ -23,20 +23,22 @@ public class SpawnHandler : ScriptableObject
                     SpawnDualPieces(piece, 1);
                     break;
                 case PieceType.Queen:
-                    CreatePiece(piece, new Vector2Int(3, piece.GetColor() == PlayerColor.Dark ? 7 : 0));
+                    CreatePiece(piece, new Vector2Int(3, piece.Color == PlayerColor.Dark ? 7 : 0));
                     break;
                 case PieceType.King:
-                    CreatePiece(piece, new Vector2Int(4, piece.GetColor() == PlayerColor.Dark ? 7 : 0));
+                    CreatePiece(piece, new Vector2Int(4, piece.Color == PlayerColor.Dark ? 7 : 0));
                     break;
                 default:
                     break;
             }
         }
+
+        GameManager.Instance.ChangeState(GameState.PlayerLightTurn);
     }
 
     private void SpawnPawns(Pawn pawn)
     {
-        int yPos = pawn.GetColor() == PlayerColor.Dark ? 6 : 1;
+        int yPos = pawn.Color == PlayerColor.Dark ? 6 : 1;
         for (int i = 0; i < 8; i++)
         {
             CreatePiece(pawn, new Vector2Int(i, yPos));
@@ -45,7 +47,7 @@ public class SpawnHandler : ScriptableObject
 
     private void SpawnDualPieces(Pawn piece, int xPosOffset)
     {
-        int yPos = piece.GetColor() == PlayerColor.Dark ? 7 : 0;
+        int yPos = piece.Color == PlayerColor.Dark ? 7 : 0;
         CreatePiece(piece, new Vector2Int(0 + xPosOffset, yPos));
         CreatePiece(piece, new Vector2Int(7 - xPosOffset, yPos));
     }

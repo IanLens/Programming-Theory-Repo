@@ -8,14 +8,14 @@ public class Queen : Rook
     {
         List<Vector2Int> possibleLocations = new List<Vector2Int>();
 
-        possibleLocations.AddRange(CheckDirection(Vector2Int.right));
-        possibleLocations.AddRange(CheckDirection(Vector2Int.left));
-        possibleLocations.AddRange(CheckDirection(Vector2Int.up));
-        possibleLocations.AddRange(CheckDirection(Vector2Int.down));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(1, 1)));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(-1, 1)));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(1, -1)));
-        possibleLocations.AddRange(CheckDirection(new Vector2Int(-1, -1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(Vector2Int.right));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(Vector2Int.left));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(Vector2Int.up));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(Vector2Int.down));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(1, 1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(-1, 1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(1, -1)));
+        possibleLocations.AddRange(GetAvailableMovesInDirection(new Vector2Int(-1, -1)));
 
         return possibleLocations;
     }

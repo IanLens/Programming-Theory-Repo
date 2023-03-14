@@ -11,11 +11,11 @@ public class InteractionHandler : ScriptableObject
         bool highlight = false;
         if (currentPiece == null)
         {
-            highlight = piece.GetColor() == GameManager.Instance.currentColor ? isOver : false;
+            highlight = piece.Color == GameManager.Instance.currentColor ? isOver : false;
         }
         else if (ComparePossibleLocations(piece.coordinates))
         {
-            highlight = piece.GetColor() != GameManager.Instance.currentColor ? isOver : false;
+            highlight = piece.Color != GameManager.Instance.currentColor ? isOver : false;
         }
         GameManager.Instance.gridManager.SetHighLight(piece.coordinates, highlight);
     }
@@ -31,7 +31,7 @@ public class InteractionHandler : ScriptableObject
     public void ClickPiece(Pawn piece)
     {
         Vector2Int targetCoordinates = piece.coordinates;
-        if (piece.GetColor() == GameManager.Instance.currentColor)
+        if (piece.Color == GameManager.Instance.currentColor)
         {
             // undo highlight
             if (piece == currentPiece)
@@ -63,9 +63,9 @@ public class InteractionHandler : ScriptableObject
 
     private void MovePieceOffBoard(Pawn piece)
     {
-        int offBoardPieces = GameManager.Instance.chessPieceList.Where(x => x.GetColor() == piece.GetColor() && !x.isActive).Count();
+        int offBoardPieces = GameManager.Instance.chessPieceList.Where(x => x.Color == piece.Color && !x.isActive).Count();
 
-        int startX = piece.GetColor() == PlayerColor.Dark ? 9 : -5;
+        int startX = piece.Color == PlayerColor.Dark ? 9 : -5;
         Vector2Int offBoardLocation = new Vector2Int(startX + offBoardPieces % 4, offBoardPieces / 4);
 
         piece.MovePiece(offBoardLocation);

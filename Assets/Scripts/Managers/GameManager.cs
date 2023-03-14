@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public enum GameState { GenerateGrid, SpawnPieces, PlayerDarkTurn, PlayerLightTurn, GameOver }
+public enum GameState { GenerateGrid, SpawnPieces, PlayerLightTurn, PlayerDarkTurn, GameOver }
 public enum PlayerColor { Dark, Light }
 public enum PieceType { Pawn, Rook, Bishop, Knight, Queen, King}
 public class GameManager : MonoBehaviour
@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.GenerateGrid);
     }
 
+    // Gamestate functionality
     public void ChangeState(GameState newState)
     {
         gameState = newState;
@@ -61,11 +62,11 @@ public class GameManager : MonoBehaviour
                 SetPlayerNamesAndScore();
                 spawnHandler.SpawnPieces(gamePiecePrefabs);
                 break;
-            case GameState.PlayerDarkTurn:
-                currentColor = PlayerColor.Dark;
-                break;
             case GameState.PlayerLightTurn:
                 currentColor = PlayerColor.Light;
+                break;
+            case GameState.PlayerDarkTurn:
+                currentColor = PlayerColor.Dark;
                 break;
             case GameState.GameOver:
                 GameOver();
@@ -75,14 +76,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // SET UP UI
     private void SetPlayerNamesAndScore()
     {
         LightPlayerNameTag.text = !string.IsNullOrEmpty(DataManager.instance?.playerLightName) ? DataManager.instance.playerLightName : "Light";
-        LightPlayerScoreTag.text = DataManager.instance?.playerLightScore.ToString();
         DarkPlayerNameTag.text = !string.IsNullOrEmpty(DataManager.instance?.playerDarkName) ? DataManager.instance.playerDarkName : "Dark";
+        UpdateScore();
+    }
+
+    private void UpdateScore()
+    {
+        LightPlayerScoreTag.text = DataManager.instance?.playerLightScore.ToString();
         DarkPlayerScoreTag.text = DataManager.instance?.playerDarkScore.ToString();
     }
 
+    // Disable gamepieces, update score and show gameOver menu with winner
     private void GameOver()
     {
         foreach (Pawn piece in chessPieceList)
@@ -94,6 +102,7 @@ public class GameManager : MonoBehaviour
 
         string gameOverText = currentColor == PlayerColor.Dark ? DataManager.instance.playerDarkName : DataManager.instance.playerLightName;
         DataManager.instance.AddToPlayerScore(currentColor);
+        UpdateScore();
         gameOverMenu.transform.Find("GameOverText").GetComponent<TMP_Text>().text = gameOverText + " wins!";
     }
 }
