@@ -43,8 +43,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spawnHandler = ScriptableObject.CreateInstance<SpawnHandler>();
-        interactionHandler = ScriptableObject.CreateInstance<InteractionHandler>();
+        spawnHandler = new SpawnHandler();
+        interactionHandler = new InteractionHandler();
         ChangeState(GameState.GenerateGrid);
     }
 

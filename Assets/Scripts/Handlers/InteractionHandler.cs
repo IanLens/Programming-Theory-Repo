@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class InteractionHandler : ScriptableObject
+public class InteractionHandler
 {
     public Pawn currentPiece { get; private set; }
     public void HoverPiece(Pawn piece, bool isOver)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnHandler : ScriptableObject
+public class SpawnHandler
 {
     public void SpawnPieces(Pawn[] gamePiecePrefabs)
     {
@@ -54,7 +54,7 @@ public class SpawnHandler : ScriptableObject
 
     private void CreatePiece(Pawn piece, Vector2Int coords)
     {
-        Pawn currentPawn = Instantiate(piece, new Vector2(coords.x, coords.y), Quaternion.identity);
+        Pawn currentPawn = Pawn.Instantiate(piece, new Vector2(coords.x, coords.y), Quaternion.identity);
         currentPawn.Init(coords.x, coords.y);
         GameManager.Instance.chessPieceList.Add(currentPawn);
         currentPawn.transform.parent = GameObject.Find("ChessPieces").transform; // chessPiecesParent;
